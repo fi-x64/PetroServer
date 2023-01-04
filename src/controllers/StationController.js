@@ -1,5 +1,6 @@
 import Station from '../models/station.js'
 import { validationResult } from 'express-validator'
+import cloudinary from 'cloudinary'
 
 class StationController {
     // [GET] /station/get-all
@@ -44,10 +45,28 @@ class StationController {
             if (!errors.isEmpty()) {
                 return res.json({ success: false, errors: errors.array() });
             }
+            const {_id, ...otherInfo} = req.body
             await Station.findByIdAndUpdate(req.params.station_id, {
-                ...req.body
+                ...otherInfo
             })
             return res.json({ success: true, message: 'Station updated successfully!' })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    // [PATCH] /station/station_id
+    async deleteImage(req, res, next) {
+        try {
+            const station = await Station.findById(req.params.station_id)
+            if (!station) return res.status(400).json({ success: false, message: 'Station not found' })
+            station.images = station.images.filter(x => x.public_id !== req.body.imagePublicId)
+            await station.save()
+            console.log(req.body.imagePublicId)
+            cloudinary.v2.uploader.destroy(req.body.imagePublicId, function (error, result) {
+                // if (error) return res.json({ success: false, message: 'Something went wrong!' })
+            });
+            return res.status(200).json({ success: true, message: 'Image deleted' })
         } catch (error) {
             next(error)
         }

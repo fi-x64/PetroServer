@@ -8,6 +8,7 @@ router.get('/get-all', StationController.getAllStation)
 router.get('/:station_id', StationController.getStation)
 router.post('/', ...stationValidator, StationController.addStation)
 router.put('/:station_id', ...stationValidator, StationController.updateStation)
+router.patch('/:station_id', StationController.deleteImage)
 router.delete('/:station_id', StationController.deleteStation)
 
 export default router

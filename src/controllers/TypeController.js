@@ -25,6 +25,18 @@ class TypeController {
         }
     }
 
+    // [DELETE] /type/:typeId
+    async deleteType(req, res, next) {
+        try {
+            const type = await Type.findById(req.params.typeId)
+            if (!type) return res.status(400).json({ success: false, message: 'Type not found' })
+            await type.delete()
+            return res.json({ success: true, message: 'Type deleted' })
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }
 
 export default new TypeController()
