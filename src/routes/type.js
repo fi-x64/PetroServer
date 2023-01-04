@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.get('/get-all', TypeController.getAllType)
 router.post('/', TypeController.addType)
+router.delete('/', TypeController.deleteType)
 
 export default router
