@@ -14,11 +14,11 @@ class AuthController {
             const isCorrectPassword = await bcrypt.compare(req.body.password, user.password)
             if (!isCorrectPassword)
                 return res.json({ success: false, message: 'Password is incorrect' })
-
-            const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' })
-            const { password, ...otherDetails } = user._doc;
-            req.user = otherDetails
-            res.cookie("access_token", token).status(200).json({ success: true, details: { ...otherDetails }, token: token });
+            return res.json({ success: true, message: 'Login success' })
+            // const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' })
+            // const { password, ...otherDetails } = user._doc;
+            // req.user = otherDetails
+            // res.cookie("access_token", token).status(200).json({ success: true, details: { ...otherDetails }, token: token });
         }
         catch (err) {
             next(err)
@@ -43,10 +43,11 @@ class AuthController {
             }
 
             const hashedPassword = await bcrypt.hash(req.body.password, 10)
-            await savedUser.create({
+            const user = new User({
+                email: req.body.email,
                 password: hashedPassword,
-                email: req.body.email
-            })
+            });
+            await user.save()
             res.json({ success: true, message: 'Register successfully!' })
         } catch (error) {
             next(error)

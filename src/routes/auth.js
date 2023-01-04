@@ -1,11 +1,11 @@
 import express from 'express';
 
 import AuthController from '../controllers/AuthController.js'
-import { userValidator } from '../utils/dataValidator.js'
+// import { userValidator } from '../utils/dataValidator.js'
 
 
 const router = express.Router();
-const CLIENT_URL = "http://localhost:3000";
+// const CLIENT_URL = "http://localhost:3000";
 
 
 router.get("/login/success", (req, res) => {
@@ -19,8 +19,9 @@ router.get("/login/success", (req, res) => {
 });
 
 router.post('/login', AuthController.login)
-router.post('/register', ...userValidator, AuthController.register)
+// router.post('/register', ...userValidator, AuthController.register)
+router.post('/register', AuthController.register)
 router.post('/logout', AuthController.logout)
-router.get('/', AuthController.getAll)
+// router.get('/', AuthController.getAll)
 
 export default router
