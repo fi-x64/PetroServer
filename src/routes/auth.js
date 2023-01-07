@@ -5,8 +5,6 @@ import AuthController from '../controllers/AuthController.js'
 
 
 const router = express.Router();
-// const CLIENT_URL = "http://localhost:3000";
-
 
 router.get("/login/success", (req, res) => {
     if (req.user) {
@@ -19,9 +17,7 @@ router.get("/login/success", (req, res) => {
 });
 
 router.post('/login', AuthController.login)
-// router.post('/register', ...userValidator, AuthController.register)
 router.post('/register', AuthController.register)
 router.post('/logout', AuthController.logout)
-// router.get('/', AuthController.getAll)
 
 export default router

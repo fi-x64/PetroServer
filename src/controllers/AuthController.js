@@ -10,12 +10,24 @@ class AuthController {
         try {
             const user = await User.findOne({ email: req.body.email })
             if (!user)
-                return res.json({ success: false, message: 'User with that email not found' })
+                return res.status(401).json({
+                    success: false,
+                    accessToken: null,
+                    message: 'User with that email not found'
+                })
             const isCorrectPassword = await bcrypt.compare(req.body.password, user.password)
             if (!isCorrectPassword)
-                return res.json({ success: false, message: 'Password is incorrect' })
-            return res.json({ success: true, message: 'Login success' })
-            // const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' })
+                return res.status(401).json({ success: false, message: 'Password is incorrect' })
+
+            const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' })
+
+            return res.status(200).json({
+                success: true,
+                message: 'Login success',
+                email: user.email,
+                roles: user.role,
+                accessToken: token
+            })
             // const { password, ...otherDetails } = user._doc;
             // req.user = otherDetails
             // res.cookie("access_token", token).status(200).json({ success: true, details: { ...otherDetails }, token: token });
@@ -46,6 +58,7 @@ class AuthController {
             const user = new User({
                 email: req.body.email,
                 password: hashedPassword,
+                role: "admin",
             });
             await user.save()
             res.json({ success: true, message: 'Register successfully!' })
