@@ -11,12 +11,15 @@ dotenv.config()
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors())
+
 cloudinary.config({
-    cloud_name: 'dantocthang',
-    api_key: '584512546662476',
-    api_secret: 's6isfkM601jAgaTXEDUrsyuq48s',
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET,
     secure: true
 });
+
+mongoose.set("strictQuery", false);
 
 mongoose.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
     console.log('DB connected')
