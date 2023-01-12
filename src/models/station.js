@@ -48,6 +48,10 @@ const StationSchema = mongoose.Schema({
     address: {
         type: String,
         required: true
+    },
+    areaId: {
+        type: mongoose.Types.ObjectId,
+        required: false
     }
 }, { timestamps: true })
 
