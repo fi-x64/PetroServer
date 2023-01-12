@@ -45,7 +45,7 @@ class StationController {
             if (!errors.isEmpty()) {
                 return res.json({ success: false, errors: errors.array() });
             }
-            const {_id, ...otherInfo} = req.body
+            const { _id, ...otherInfo } = req.body
             await Station.findByIdAndUpdate(req.params.station_id, {
                 ...otherInfo
             })

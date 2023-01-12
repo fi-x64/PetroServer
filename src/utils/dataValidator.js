@@ -2,8 +2,8 @@ import { body } from 'express-validator'
 
 export const stationValidator = [
     body('name').isLength({ min: 4, max: 100 }).withMessage('Name must be at least 4 characters and less than 100 characters'),
-    body('latitude').isNumeric({ min: -90, max: 90 }).withMessage('Latitude value must be between -90 and 90'),
-    body('longitude').isNumeric({ min: -180, max: 180 }).withMessage('Longtitude value must be between -180 and 180'),
+    body('latitude').isFloat({ min: -90, max: 90 }).withMessage('Latitude value must be between -90 and 90'),
+    body('longitude').isFloat({ min: -180, max: 180 }).withMessage('Longtitude value must be between -180 and 180'),
     body('taxNumber').isLength({ min: 1 }).withMessage('Tax number is required'),
     body('certNumber').isLength({ min: 1 }).withMessage('Cert number is required'),
     body('fuelColumns').isArray({ min: 1 }).withMessage('The station should include at least one fuel column'),
