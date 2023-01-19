@@ -4,6 +4,7 @@ import authJwt from '../middleware/authJwt.js';
 
 const router = express.Router();
 
+router.get('/', UserController.search)
 router.get('/all', UserController.allAccess)
 router.get('/admin', [authJwt.verifyToken, authJwt.isAdmin], UserController.adminBoard)
 
