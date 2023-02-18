@@ -7,5 +7,6 @@ const router = express.Router();
 router.get('/', UserController.search)
 router.get('/all', UserController.allAccess)
 router.get('/admin', [authJwt.verifyToken, authJwt.isAdmin], UserController.adminBoard)
+router.post('/search', UserController.search)
 
 export default router
