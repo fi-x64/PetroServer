@@ -25,7 +25,7 @@ class UserController {
             }
             )
             if (data) {
-                return res.json({ success: true, data })
+                return res.status(200).json({ success: true, data })
             }
             return res.json({ success: false, message: 'Values not found' })
         } catch (error) {
