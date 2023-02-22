@@ -23,7 +23,7 @@ class UserController {
                     { "address": { $regex: '.*' + values + '.*', $options: 'i' } }
                 ]
             }
-            )
+            ).limit(10)
             if (data) {
                 return res.status(200).json({ success: true, data })
             }

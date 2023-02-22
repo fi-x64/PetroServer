@@ -4,7 +4,9 @@ import { stationValidator } from '../utils/dataValidator.js';
 
 const router = express.Router();
 
+router.post('/sample', StationController.sampleData)
 router.get('/get-all', StationController.getAllStation)
+router.get('/notify', StationController.getStationNotify)
 router.get('/:station_id', StationController.getStation)
 router.post('/', ...stationValidator, StationController.addStation)
 router.put('/:station_id', ...stationValidator, StationController.updateStation)
