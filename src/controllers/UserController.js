@@ -16,14 +16,32 @@ class UserController {
     async search(req, res, next) {
         try {
             const values = req.body.data;
-            if (!values) return res.json({ success: false, message: 'Values not found' })
-            let data = await Station.find({
-                $or: [
-                    { "name": { $regex: '.*' + values + '.*', $options: 'i' } },
-                    { "address": { $regex: '.*' + values + '.*', $options: 'i' } }
-                ]
+            const areaId = req.body.areaId;
+
+            if (!values) return res.json({ success: false, message: 'Values not found' });
+            let data;
+            if (areaId) {
+                data = await Station.find({
+                    $and: [{ areaId: areaId },
+                    {
+                        $or: [
+                            { "name": { $regex: '.*' + values + '.*', $options: 'i' } },
+                            { "address": { $regex: '.*' + values + '.*', $options: 'i' } }
+                        ]
+                    }
+                    ]
+                }
+                ).limit(10)
             }
-            ).limit(10)
+            else {
+                data = await Station.find({
+                    $or: [
+                        { "name": { $regex: '.*' + values + '.*', $options: 'i' } },
+                        { "address": { $regex: '.*' + values + '.*', $options: 'i' } }
+                    ]
+                }
+                ).limit(10)
+            }
             if (data) {
                 return res.status(200).json({ success: true, data })
             }

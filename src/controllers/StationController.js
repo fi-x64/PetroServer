@@ -18,6 +18,15 @@ class StationController {
         }
     }
 
+    async getAreaStation(req, res, next) {
+        try {
+            const stations = await Station.find({ areaId: req.params.area_id })
+            return res.status(200).json({ success: true, data: stations })
+        } catch (error) {
+            next(error)
+        }
+    }
+
     // [GET] /station/:station_id
     async getStation(req, res, next) {
         try {
