@@ -1,6 +1,11 @@
 import Station from '../models/station.js'
 import { validationResult } from 'express-validator'
 import cloudinary from 'cloudinary'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc.js'
+import timezone from 'dayjs/plugin/timezone.js'
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 class StationController {
     // [GET] /station/get-all
@@ -86,6 +91,67 @@ class StationController {
         try {
             await Station.findByIdAndDelete(req.params.station_id)
             return res.json({ success: true, message: 'Station deleted successfully!' })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    // [GET] /station/notify
+    async getStationNotify(req, res, next) {
+        try {
+            const notes = await Station.find({}).populate({
+                path: "fuelColumns",
+                match: {
+                    inspectionDate: { $lte: dayjs().format() },
+                }
+            })
+
+            // const notes = await Station.findById('63bfce7d4e27b3bc0d2c5472')
+            // const columns = notes.fuelColumns[0].inspectionDate
+            // console.log(dayjs(columns) > dayjs())
+            return res.json({ success: true, data: notes })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    // [POST] /station/samples
+    async sampleData(req, res, next) {
+        try {
+            for (let i = 1; i <= 500; i++) {
+                const lat = 10.2 + Math.random()
+                const lng = 104.8 + Math.random()
+                await Station.create(
+                    {
+                        name: "my perto",
+                        longitude: lng,
+                        latitude: lat,
+                        company: {
+                            name: "Company name",
+                        },
+                        taxNumber: "asfdsaf",
+                        certNumber: "fasdfaf",
+                        fuelColumns: [
+                            {
+                                fuelNumber: "fsadfa",
+                                checkNumber: "fasdfaf",
+                                columnType: "TOKICO-ATKC",
+                                inspectionDate: "2023-01-11T02:51:38.409Z",
+                                termDate: "2023-01-11T02:51:38.409Z",
+
+                            }
+                        ],
+                        images: [
+                            {
+                                url: "http://res.cloudinary.com/dantocthang/image/upload/v1672804811/petro/wy8aad6lsa9bafyvvxqy.jpg",
+                                public_id: "petro/wy8aad6lsa9bafyvvxqy",
+                            },
+                        ],
+                        address: "safasdfasdf",
+                        areaId: "63be2cc8b6085e3ae0ac578d"
+                    }
+                )
+            }
         } catch (error) {
             next(error)
         }
