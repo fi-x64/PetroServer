@@ -33,8 +33,8 @@ const StationSchema = mongoose.Schema({
             fuelNumber: String, // So cot do
             checkNumber: String, // So tem kiem dinh
             columnType: String,
-            inspectionDate: String, // Ngay kiem dinh
-            termDate: String // Han kiem dinh
+            inspectionDate: Date, // Ngay kiem dinh
+            termDate: Date // Han kiem dinh
         }
     ],
     images: [{

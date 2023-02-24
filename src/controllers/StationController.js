@@ -1,11 +1,8 @@
 import Station from '../models/station.js'
 import { validationResult } from 'express-validator'
 import cloudinary from 'cloudinary'
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc.js'
-import timezone from 'dayjs/plugin/timezone.js'
-dayjs.extend(utc)
-dayjs.extend(timezone)
+import moment from 'moment'
+
 
 class StationController {
     // [GET] /station/get-all
@@ -90,17 +87,18 @@ class StationController {
     // [GET] /station/notify
     async getStationNotify(req, res, next) {
         try {
-            const notes = await Station.find({}).populate({
-                path: "fuelColumns",
-                match: {
-                    inspectionDate: { $lte: dayjs().format() },
-                }
+            const late = await Station.find({}).elemMatch('fuelColumns', {
+                inspectionDate: { $lte: moment() }
+            })
+
+            const upcoming = await Station.find({}).elemMatch('fuelColumns', {
+                $and: [{ inspectionDate: { $gte: moment() } }, { inspectionDate: { $lte: moment().add(3, 'd') } }]
             })
 
             // const notes = await Station.findById('63bfce7d4e27b3bc0d2c5472')
             // const columns = notes.fuelColumns[0].inspectionDate
-            // console.log(dayjs(columns) > dayjs())
-            return res.json({ success: true, data: notes })
+            // console.log(moment(columns) > moment())
+            return res.json({ success: true, data: { late, upcoming } })
         } catch (error) {
             next(error)
         }
@@ -127,9 +125,8 @@ class StationController {
                                 fuelNumber: "fsadfa",
                                 checkNumber: "fasdfaf",
                                 columnType: "TOKICO-ATKC",
-                                inspectionDate: "2023-01-11T02:51:38.409Z",
-                                termDate: "2023-01-11T02:51:38.409Z",
-
+                                inspectionDate: moment().subtract(2, 'd'),
+                                termDate: moment().subtract(30, 'd'),
                             }
                         ],
                         images: [
@@ -143,6 +140,7 @@ class StationController {
                     }
                 )
             }
+            return res.json({ success: true })
         } catch (error) {
             next(error)
         }
