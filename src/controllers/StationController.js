@@ -69,12 +69,12 @@ class StationController {
     // [PATCH] /station/station_id
     async deleteImage(req, res, next) {
         try {
+            const { imagePublicId } = req.body
             const station = await Station.findById(req.params.station_id)
             if (!station) return res.status(400).json({ success: false, message: 'Station not found' })
-            station.images = station.images.filter(x => x.public_id !== req.body.imagePublicId)
+            station.images = station.images.filter(x => x.public_id !== imagePublicId)
             await station.save()
-            console.log(req.body.imagePublicId)
-            cloudinary.v2.uploader.destroy(req.body.imagePublicId, function (error, result) {
+            cloudinary.v2.uploader.destroy(imagePublicId, function (error, result) {
                 // if (error) return res.json({ success: false, message: 'Something went wrong!' })
             });
             return res.status(200).json({ success: true, message: 'Image deleted' })
@@ -104,9 +104,6 @@ class StationController {
                 $and: [{ inspectionDate: { $gte: moment() } }, { inspectionDate: { $lte: moment().add(3, 'd') } }]
             })
 
-            // const notes = await Station.findById('63bfce7d4e27b3bc0d2c5472')
-            // const columns = notes.fuelColumns[0].inspectionDate
-            // console.log(moment(columns) > moment())
             return res.json({ success: true, data: { late, upcoming } })
         } catch (error) {
             next(error)
