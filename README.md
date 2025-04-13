@@ -2,15 +2,15 @@
 
 **Clone the repository**
   git clone https://github.com/fi-x64/PetroServer.git <br/>
-  cd PetroServer
+  cd PetroServer <br/>
   npm install
  
 # Script	Description
   npm run dev:	Start dev server with nodemon <br />
   
 # Run the Project
-  Start the server in development mode:
-    npm run dev
+  Start the server in development mode: <br/>
+    npm run dev <br/>
   By default, it will run at http://localhost:3000/
 
 =================================================================
