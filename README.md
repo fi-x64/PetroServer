@@ -1,8 +1,8 @@
 # Getting Started
 
 **Clone the repository**
-  git clone https://github.com/fi-x64/PetroServer.git
-  cd natours
+  git clone https://github.com/fi-x64/PetroServer.git <br/>
+  cd PetroServer
   npm install
  
 # Script	Description
